@@ -28,5 +28,9 @@ public class ProductService {
 		return response;
 
 	}
+	
+	public Product getProductById(Long id) {
+		return productRepository.findById(id).orElseThrow(() -> new RuntimeException("product not found"));
+	}
 
 }
