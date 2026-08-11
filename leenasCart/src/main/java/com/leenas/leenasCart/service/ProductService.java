@@ -12,8 +12,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.leenas.leenasCart.dto.ProductReviewDto;
 import com.leenas.leenasCart.entity.Product;
+import com.leenas.leenasCart.entity.ProductReview;
 import com.leenas.leenasCart.repository.ProductRepository;
+import com.leenas.leenasCart.repository.ProductReviewRepository;
 import com.leenas.leenasCart.spec.ProductSpecification;
 
 @Service
@@ -21,6 +24,9 @@ public class ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private ProductReviewRepository productReviewRepository;
 
 	public Map<String, Object> getAllProducts(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
@@ -41,6 +47,18 @@ public class ProductService {
 				and(ProductSpecification.priceBetween(minPrice, maxPrice)).and(ProductSpecification.hasNameorDescriptionLike(keyword)).and(ProductSpecification.ratingGreaterThan(ratings));
 		
 		return productRepository.findAll(spec);
+	}
+
+	public void addReview(ProductReviewDto reviewDto) {
+		// TODO Auto-generated method stub
+		Product product = productRepository.findById(reviewDto.getProductId()).orElseThrow( () -> new RuntimeException("product not found."));
+		
+		ProductReview review = new ProductReview();
+		review.setComment(reviewDto.getComment());
+		review.setRating(reviewDto.getRating());
+		review.setProduct(product);
+		
+		productReviewRepository.save(review);
 	}
 	
 	
