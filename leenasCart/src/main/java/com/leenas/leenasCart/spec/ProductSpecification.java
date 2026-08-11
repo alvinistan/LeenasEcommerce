@@ -40,4 +40,10 @@ public class ProductSpecification {
 	        );
 	    };
 	}
+	
+	public static Specification<Product> ratingGreaterThan(Double ratings) {
+		return (root,query,cb) -> {
+			return cb.greaterThanOrEqualTo(root.get("ratings"),ratings);
+		};
+	}
 }
